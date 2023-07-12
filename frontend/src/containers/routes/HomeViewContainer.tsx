@@ -413,13 +413,28 @@ const ages = [
 ];
 
 export const HomeViewContainer = () => {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
 
-  const { data, startFetch } = useFetchApi("/cats");
+  const [cats, setCats] = useState([]);
+  const [ages, setAges] = useState([]);
+  const [breeds, setBreeds] = useState([]);
+
+  const { data: catsData, startFetch: startFetchCats } = useFetchApi("/cats");
+  const { data: agesData, startFetch: startFetchAges } = useFetchApi("/ages");
+  const { data: breedsData, startFetch: startFetchBreeds } =
+    useFetchApi("/breeds");
+
+  const { startFetch: createCat } = useFetchApi("/cats", "POST");
 
   const form = usePetEditForm({
     onSubmit: (values) => {
-      console.log("values", values);
+      createCat(
+        JSON.stringify({
+          name: values.name,
+          breed: values.breed.name,
+          age: values.age.name,
+        })
+      );
     },
   });
 
@@ -434,13 +449,48 @@ export const HomeViewContainer = () => {
   };
 
   useEffect(() => {
-    startFetch();
+    startFetchCats();
+    startFetchAges();
+    startFetchBreeds();
   }, []);
+
+  useEffect(() => {
+    if (catsData?.data) {
+      setCats(catsData.data);
+    }
+    [catsData];
+  });
+
+  useEffect(() => {
+    if (agesData?.data) {
+      setAges(agesData.data);
+    }
+    [agesData];
+  });
+
+  useEffect(() => {
+    if (breedsData?.data) {
+      setBreeds(breedsData.data);
+    }
+    [breedsData];
+  });
+
+  useEffect(() => {
+    console.log(cats);
+  }, [catsData]);
+
+  useEffect(() => {
+    console.log(ages);
+  }, [agesData]);
+
+  // useEffect(() => {
+  //   console.log(breeds);
+  // }, [breedsData]);
 
   return (
     <>
       <View onOpenEditPetModal={onOpen}>
-        <CatsList cats={[]} />
+        <CatsList cats={cats} />
       </View>
       <PetEditPanel
         isOpen={isOpen}
