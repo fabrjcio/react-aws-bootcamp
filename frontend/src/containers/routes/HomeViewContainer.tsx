@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 
 import { View } from "../../components/View";
-import { PetCard } from "../../components/PetCard";
+import { CatsList } from "../../components/CatsList";
 import { PetEditPanel } from "../../components/PetEditPanel";
-
 import { usePetEditForm } from "../../hooks/usePetEditForm";
 import { useFetchApi } from "../../hooks/useFetchApi";
 
@@ -438,25 +437,10 @@ export const HomeViewContainer = () => {
     startFetch();
   }, []);
 
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
-
   return (
     <>
       <View onOpenEditPetModal={onOpen}>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-          <PetCard />
-          <PetCard />
-          <PetCard />
-          <PetCard />
-          <PetCard />
-          <PetCard />
-          <PetCard />
-          <PetCard />
-          <PetCard />
-          <PetCard />
-        </div>
+        <CatsList cats={[]} />
       </View>
       <PetEditPanel
         isOpen={isOpen}
